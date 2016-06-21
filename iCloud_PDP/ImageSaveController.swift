@@ -12,6 +12,7 @@ class ImageSaveController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
     
     var saveCallback: ((title: String) -> Void)?
     
@@ -21,6 +22,7 @@ class ImageSaveController: UIViewController {
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: #selector(ImageSaveController.doneAction(_:)))
         toolbar.setItems([doneButton], animated: true)
         self.titleTextField.inputAccessoryView = toolbar
+        self.saveButton.layer.borderColor = self.saveButton.tintColor.CGColor
     }
     
     func doneAction(sender: AnyObject) {

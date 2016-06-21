@@ -391,7 +391,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.flatstack.iCloud;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d7104b41-fe68-4e89-9e48-b80e5aa657e1";
+				PROVISIONING_PROFILE = "d8c1b2e8-9ede-4caf-81d4-afc285b11ce3";
 			};
 			name = Debug;
 		};
