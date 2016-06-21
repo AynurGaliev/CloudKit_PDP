@@ -15,8 +15,10 @@ class PhotosCell: UITableViewCell {
     @IBOutlet weak var infoLabel: UILabel!
     
     func prepareCell(photo: CKRecord) {
-        self.photoImageView.image = photo.objectForKey("image") as? UIImage
-        self.infoLabel.text = photo.objectForKey("name") as? String
+        self.infoLabel.text = photo.objectForKey("title") as? String
+        guard let asset = photo.objectForKey("image") as? CKAsset else { return }
+        guard let data = NSData(contentsOfURL: asset.fileURL), let image = UIImage(data: data) else { return }
+        self.photoImageView.image = image
     }
     
     override func prepareForReuse() {

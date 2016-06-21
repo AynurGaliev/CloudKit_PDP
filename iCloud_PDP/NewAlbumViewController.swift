@@ -14,6 +14,8 @@ class NewAlbumViewController: UIViewController {
     @IBOutlet weak var albumNameTextField: UITextField!
     @IBOutlet weak var saveOptionSwitch: UISwitch!
     
+    var albumDidSaved: ((album: CKRecord, isPrivateRecord: Bool) -> Void)?
+    
     @IBAction func saveAction(sender: UIButton) {
         let album = CKRecord(recordType: "Album")
         album.setObject(self.albumNameTextField.text, forKey: "name")
@@ -22,11 +24,19 @@ class NewAlbumViewController: UIViewController {
 
         database.saveRecord(album, completionHandler: { (record: CKRecord?, error: NSError?) in
             
-            guard error == nil else {
-                return
+            UI_THREAD {
+                
+                if let lError = error {
+                    let alert = UIAlertController(title: "Error", message: lError.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                } else {
+                    if let lAlbum = record {
+                        self.albumDidSaved?(album: lAlbum, isPrivateRecord: self.saveOptionSwitch.on)
+                    }
+                }
+                self.dismissViewControllerAnimated(true, completion: nil)
             }
-            
-            self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
 }

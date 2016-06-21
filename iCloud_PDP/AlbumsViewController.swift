@@ -17,6 +17,10 @@ var PRIVATE_DATABASE: CKDatabase  {
     return CKContainer.defaultContainer().privateCloudDatabase
 }
 
+func UI_THREAD(UI_BLOCK: (()->())) {
+    dispatch_async(dispatch_get_main_queue(), UI_BLOCK)
+}
+
 class AlbumsViewController: UIViewController {
 
     private var publicAlbums: [CKRecord] = [] {
@@ -82,21 +86,21 @@ class AlbumsViewController: UIViewController {
         database.performQuery(query, inZoneWithID: nil) { (records: [CKRecord]?, error: NSError?) in
             
             guard error == nil else {
-                dispatch_async(dispatch_get_main_queue(), {
+                UI_THREAD {
                     let alert = UIAlertController(title: "iCloud error", message: error?.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
                     let action = UIAlertAction(title: "OK, got it", style: UIAlertActionStyle.Destructive, handler: nil)
                     alert.addAction(action)
                     self.presentViewController(alert, animated: true, completion: nil)
-                })
+                }
                 return
             }
             
-            dispatch_async(dispatch_get_main_queue(), {
+            UI_THREAD {
                 switch section {
                     case .Public  : self.publicAlbums  = records ?? []
                     case .Private : self.privateAlbums = records ?? []
                 }
-            })
+            }
         }
     }
     
@@ -105,8 +109,8 @@ class AlbumsViewController: UIViewController {
         self.tableView.registerNib(UINib.init(nibName: "HeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: HeaderIdentifiers.AlbumHeader.rawValue)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         self.updateRecords(forSection: .Public)
         self.updateRecords(forSection: .Private)
     }
@@ -123,6 +127,18 @@ class AlbumsViewController: UIViewController {
                 let indexPath = sender as! NSIndexPath
                 destinationVC.album = self.getAlbums(Sections(rawValue: indexPath.section)!)[indexPath.row]
                 destinationVC.database = indexPath.section == 0 ? PUBLIC_DATABASE : PRIVATE_DATABASE
+            case SegueIdentifiers.NewAlbumSegue.rawValue:
+                let destinationVC = segue.destinationViewController as! NewAlbumViewController
+                destinationVC.albumDidSaved = { (album: CKRecord, isPrivateRecord: Bool) -> Void in
+                    UI_THREAD {
+                        if isPrivateRecord {
+                            self.privateAlbums.append(album)
+                        } else {
+                            self.publicAlbums.append(album)
+                        }
+                        self.tableView.reloadData()
+                    }
+                }
             default:
                 return
         }
