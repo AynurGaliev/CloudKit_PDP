@@ -45,7 +45,10 @@ class PopoverPresentationController: UIPresentationController {
     
     override func frameOfPresentedViewInContainerView() -> CGRect {
         guard let lContainerView = self.containerView else { return CGRectZero }
-        return CGRect(x: lContainerView.fs_width*0.1, y: lContainerView.fs_height*0.1, width: lContainerView.fs_width*0.8, height: lContainerView.fs_height*0.8)
+        return CGRect(x     : lContainerView.fs_width*0.1,
+                      y     : lContainerView.fs_height*0.1,
+                      width : lContainerView.fs_width*0.8,
+                      height: lContainerView.fs_height*0.8)
     }
 
     override func containerViewWillLayoutSubviews() {

@@ -85,20 +85,41 @@ class AlbumsViewController: UIViewController {
         
         database.performQuery(query, inZoneWithID: nil) { (records: [CKRecord]?, error: NSError?) in
             
-            guard error == nil else {
+            if let lError = error, let ckError = CKErrorCode(rawValue: lError.code) {
+                
                 UI_THREAD {
-                    let alert = UIAlertController(title: "iCloud error", message: error?.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
-                    let action = UIAlertAction(title: "OK, got it", style: UIAlertActionStyle.Destructive, handler: nil)
-                    alert.addAction(action)
-                    self.presentViewController(alert, animated: true, completion: nil)
+                    switch ckError {
+                        case .NotAuthenticated:
+                            let alert = UIAlertController(title: "Error", message: lError.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
+                            alert.addAction(UIAlertAction(title: "Go to settings", style: UIAlertActionStyle.Default, handler: { Void in
+                                if UIApplication.sharedApplication().canOpenURL(NSURL(string: "prefs:root=CASTLE")!) {
+                                    UIApplication.sharedApplication().openURL(NSURL(string: "prefs:root=CASTLE")!)
+                                } else {
+                                    let alert = UIAlertController(title: "Error", message: "Failed to open iCloud settings", preferredStyle: UIAlertControllerStyle.Alert)
+                                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
+                                    self.presentViewController(alert, animated: true, completion: nil)
+                                }
+                            }))
+                            UI_THREAD {
+                                self.presentViewController(alert, animated: true, completion: nil)
+                            }
+                    default:
+                        let alert = UIAlertController(title: "iCloud error", message: error?.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                        let action = UIAlertAction(title: "OK, got it", style: UIAlertActionStyle.Destructive, handler: nil)
+                        alert.addAction(action)
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    }
                 }
                 return
-            }
+                
+            } else {
             
-            UI_THREAD {
-                switch section {
-                    case .Public  : self.publicAlbums  = records ?? []
-                    case .Private : self.privateAlbums = records ?? []
+                UI_THREAD {
+                    switch section {
+                        case .Public  : self.publicAlbums  = records ?? []
+                        case .Private : self.privateAlbums = records ?? []
+                    }
                 }
             }
         }

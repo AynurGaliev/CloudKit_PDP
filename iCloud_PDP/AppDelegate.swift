@@ -75,6 +75,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     switch ckError {
                     case .ServerRejectedRequest:
                         return
+                    case .NotAuthenticated:
+                        let alert = UIAlertController(title: "Error", message: lError.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
+                        alert.addAction(UIAlertAction(title: "Go to settings", style: UIAlertActionStyle.Default, handler: { Void in
+                            if UIApplication.sharedApplication().canOpenURL(NSURL(string: "prefs:root=CASTLE")!) {
+                                UIApplication.sharedApplication().openURL(NSURL(string: "prefs:root=CASTLE")!)
+                            } else {
+                                let alert = UIAlertController(title: "Error", message: "Failed to open iCloud settings", preferredStyle: UIAlertControllerStyle.Alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
+                                self.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+                            }
+                        }))
+                        UI_THREAD {
+                            self.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+                        }
                     default:
                         let alert = UIAlertController(title: "Error", message: lError.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
