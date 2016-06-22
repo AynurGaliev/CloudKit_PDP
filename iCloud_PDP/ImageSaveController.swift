@@ -18,7 +18,7 @@ class ImageSaveController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.fs_width, height: 30))
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.fs_width, height: 44))
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: #selector(ImageSaveController.doneAction(_:)))
         toolbar.setItems([doneButton], animated: true)
         self.titleTextField.inputAccessoryView = toolbar

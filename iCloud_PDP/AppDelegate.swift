@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.requestForRemoteNotifications()
         
         // For remote Notification
-        if let _ = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as! [NSObject : AnyObject]? {
-            UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        if let _ = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject : AnyObject]? {
+            
         }
         
         let subscription = self.makeSubscription()
@@ -28,6 +28,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.subscribe(subscription, database: PRIVATE_DATABASE)
         
         return true
+    }
+    
+    func applicationDidBecomeActive(application: UIApplication) {
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], withResponseInfo responseInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        completionHandler()
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        completionHandler()
     }
     
     func makeSubscription() -> CKSubscription {
@@ -38,7 +50,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.alertBody = "Your photos has been changed. Get more information :)"
         notificationInfo.shouldBadge = true
-        notificationInfo.alertLaunchImage = "NotificationImage"
+        notificationInfo.alertLaunchImage = "apples"
+        if #available(iOS 9.0, *) {
+            notificationInfo.category = "com.remoteNotifications.Action Category"
+        }
         
         let subscription = CKSubscription(recordType : "Photo",
                                           predicate  : predicate,
@@ -51,8 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func subscribe(subscription: CKSubscription, database: CKDatabase) {
         
-        
-        PRIVATE_DATABASE.saveSubscription(subscription) { (subscription: CKSubscription?, error: NSError?) in
+        database.saveSubscription(subscription) { (subscription: CKSubscription?, error: NSError?) in
             
             UI_THREAD {
                 
@@ -112,7 +126,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func requestForRemoteNotifications () {
-        UIApplication.sharedApplication().registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Sound, UIUserNotificationType.Badge], categories: nil))
+
+        let action1 = UIMutableUserNotificationAction()
+        if #available(iOS 9.0, *) {
+            action1.behavior = .TextInput
+        }
+        action1.activationMode = .Foreground
+        action1.title = "Action 1"
+        action1.identifier = "com.remoteNotifications.Action1"
+        action1.destructive = true
+        action1.authenticationRequired = true
+        
+        let action2 = UIMutableUserNotificationAction()
+        action2.activationMode = .Background
+        action2.title = "Action 2"
+        action2.identifier = "com.remoteNotifications.Action2"
+        action2.destructive = false
+        action2.authenticationRequired = false
+        
+        let actionCategory = UIMutableUserNotificationCategory()
+        actionCategory.identifier = "com.remoteNotifications.Action Category"
+        actionCategory.setActions([action1, action2], forContext: UIUserNotificationActionContext.Default)
+        actionCategory.setActions([action1, action2], forContext: UIUserNotificationActionContext.Minimal)
+        
+        let categories = Set<UIUserNotificationCategory>([actionCategory])
+        let notificationTypes: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Sound, UIUserNotificationType.Badge]
+        
+        let settings = UIUserNotificationSettings(forTypes: notificationTypes, categories: categories)
+
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        
         UIApplication.sharedApplication().registerForRemoteNotifications()
     }
     

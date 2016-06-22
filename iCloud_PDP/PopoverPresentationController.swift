@@ -17,6 +17,32 @@ class PopoverPresentationController: UIPresentationController {
         return UIModalPresentationStyle.FullScreen
     }
     
+    override init(presentedViewController: UIViewController, presentingViewController: UIViewController) {
+        super.init(presentedViewController: presentedViewController, presentingViewController: presentingViewController)
+        self.setupNotifications()
+    }
+    
+    private func setupNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PopoverPresentationController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PopoverPresentationController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey]?.CGRectValue() else { return }
+        guard let lPresentedView = self.presentedView() else { return }
+        lPresentedView.frame = CGRectOffset(lPresentedView.frame, 0, -keyboardFrame.size.height)
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        guard let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey]?.CGRectValue() else { return }
+        guard let lPresentedView = self.presentedView() else { return }
+        lPresentedView.frame = CGRectOffset(lPresentedView.frame, 0, keyboardFrame.size.height)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func frameOfPresentedViewInContainerView() -> CGRect {
         guard let lContainerView = self.containerView else { return CGRectZero }
         return CGRect(x: lContainerView.fs_width*0.1, y: lContainerView.fs_height*0.1, width: lContainerView.fs_width*0.8, height: lContainerView.fs_height*0.8)

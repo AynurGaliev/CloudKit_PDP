@@ -17,6 +17,7 @@
 		A42E459E1D11751600F32952 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A42E459D1D11751600F32952 /* Assets.xcassets */; };
 		A42E45A11D11751600F32952 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A42E459F1D11751600F32952 /* LaunchScreen.storyboard */; };
 		A42E45AF1D1186E000F32952 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A42E45AE1D1186E000F32952 /* CloudKit.framework */; };
+		A4C3F6951D1AB7A600F6BD81 /* apples.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A4C3F6941D1AB7A600F6BD81 /* apples.jpg */; };
 		A4D001351D18060500154549 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D001341D18060500154549 /* PhotoViewController.swift */; };
 		A4D001391D1810DD00154549 /* NewAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D001381D1810DD00154549 /* NewAlbumViewController.swift */; };
 		A4D0013B1D18165100154549 /* PhotosCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D0013A1D18165100154549 /* PhotosCell.swift */; };
@@ -40,6 +41,7 @@
 		A42E45A21D11751600F32952 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A42E45AB1D11806600F32952 /* iCloud_PDP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = iCloud_PDP.entitlements; sourceTree = "<group>"; };
 		A42E45AE1D1186E000F32952 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		A4C3F6941D1AB7A600F6BD81 /* apples.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = apples.jpg; sourceTree = "<group>"; };
 		A4D001341D18060500154549 /* PhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		A4D001381D1810DD00154549 /* NewAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewAlbumViewController.swift; sourceTree = "<group>"; };
 		A4D0013A1D18165100154549 /* PhotosCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCell.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				A42E45AB1D11806600F32952 /* iCloud_PDP.entitlements */,
+				A4C3F6941D1AB7A600F6BD81 /* apples.jpg */,
 				A42E45961D11751600F32952 /* AppDelegate.swift */,
 				A42E45981D11751600F32952 /* AlbumsViewController.swift */,
 				A4D001341D18060500154549 /* PhotoViewController.swift */,
@@ -202,6 +205,7 @@
 				A42E45A11D11751600F32952 /* LaunchScreen.storyboard in Resources */,
 				A42E459E1D11751600F32952 /* Assets.xcassets in Resources */,
 				A42E459C1D11751600F32952 /* Main.storyboard in Resources */,
+				A4C3F6951D1AB7A600F6BD81 /* apples.jpg in Resources */,
 				A4D0013F1D18220500154549 /* HeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
